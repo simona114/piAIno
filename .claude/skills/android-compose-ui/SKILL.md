@@ -160,31 +160,6 @@ fun Modifier.roundedBackground(color: Color, radius: Dp) =
 
 ---
 
-## Design System & Slot APIs
-
-The design system lives in `:core:design-system` and contains reusable Compose components, colors, theme, and typography.
-
-Use slot APIs (passing `@Composable` lambdas) primarily for design system components that need flexible content areas:
-
-```kotlin
-// Slot API — design system component
-@Composable
-fun AppCard(
-    modifier: Modifier = Modifier,
-    header: @Composable () -> Unit,
-    content: @Composable () -> Unit
-) {
-    Card(modifier = modifier) {
-        header()
-        content()
-    }
-}
-```
-
-Feature-level composables should prefer typed parameters over slots for clarity.
-
----
-
 ## Previews
 
 Every Screen composable should have at least one meaningful `@Preview` that shows a realistic state:
@@ -242,5 +217,3 @@ TextField(
     onValueChange = { onAction(NoteEditorAction.OnTitleChange(it)) }
 )
 ```
-
-The ViewModel updates state (and optionally persists to `SavedStateHandle`) in response to the Action — see the **android-presentation-mvi** skill for the full pattern.
