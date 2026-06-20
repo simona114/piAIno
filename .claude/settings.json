@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p generated && cat >> generated/prompts-log.txt"
+          }
+        ]
+      }
+    ]
+  }
+}
