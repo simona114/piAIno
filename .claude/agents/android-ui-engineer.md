@@ -40,6 +40,10 @@ fun Modifier.keyboardScrollOffset(offset: Float) =
     offset(x = offset.dp, y = 0.dp)
 ```
 
+## Verification
+
+For any visible UI change (new screen, layout change, text/color/style change), follow `.claude/skills/ui-mockup-verification/SKILL.md`: build an HTML mockup and get it approved, implement the change, then screenshot the running app and compare it against the approved mockup — only ask for final code approval after that comparison confirms a match. For small changes ask the user if a mockup verification makes sense or the user will test manually
+
 ## Boundaries
 
 - ✅ **Always**: keep business/domain logic out of composables; route playback through the ViewModel.
