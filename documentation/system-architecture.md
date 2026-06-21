@@ -23,6 +23,8 @@ Loads/holds piano sound samples, maps a resolved note (from Piano Domain) to pla
 
 **Why separate:** The spec singles this out twice — minimizing key-press-to-sound latency, and supporting rapid/overlapping presses without interrupting playback. This has its own technology (low-latency Android audio APIs, pooled playback resources, careful threading) and failure modes (glitches, dropped notes) unrelated to note-naming or layout math. It depends on Piano Domain; Piano Domain does not depend on it.
 
+**Sample source:** 30 real piano note recordings (one every 3 semitones, A0-C8), pitch-shifted via `SoundPool` playback rate to cover the other 58 keys. Samples are from the "Salamander Grand Piano" by Alexander Holm, licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), original recordings at [archive.org/details/SalamanderGrandPianoV3](https://archive.org/details/SalamanderGrandPianoV3), downloaded via the [darosh/samples-piano-mp3](https://github.com/darosh/samples-piano-mp3) packaging (served from jsdelivr). See `app/src/main/assets/CREDITS.md` for the bundled attribution.
+
 ## Testing
 
 Testing is a cross-cutting practice within each module, not a module of its own:
