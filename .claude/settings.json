@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "mkdir -p generated && cat >> generated/prompts-log.txt"
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && mkdir -p generated && cat >> generated/prompts-log.txt"
           }
         ]
       }
