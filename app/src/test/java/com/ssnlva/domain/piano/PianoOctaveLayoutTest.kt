@@ -27,4 +27,11 @@ class PianoOctaveLayoutTest {
         )
         assertEquals(expected, isBlackPattern)
     }
+
+    @Test
+    fun `note names follow the real piano pattern`() {
+        val names = PianoOctaveLayout.keys.map { it.name }
+        val expected = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
+        assertEquals(expected, names)
+    }
 }

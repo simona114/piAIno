@@ -1,20 +1,20 @@
 package com.ssnlva.domain.piano
 
-data class PianoKey(val isBlack: Boolean)
+data class PianoKey(val name: String, val isBlack: Boolean)
 
 object PianoOctaveLayout {
     val keys: List<PianoKey> = listOf(
-        PianoKey(isBlack = false), // C
-        PianoKey(isBlack = true),  // C#
-        PianoKey(isBlack = false), // D
-        PianoKey(isBlack = true),  // D#
-        PianoKey(isBlack = false), // E
-        PianoKey(isBlack = false), // F
-        PianoKey(isBlack = true),  // F#
-        PianoKey(isBlack = false), // G
-        PianoKey(isBlack = true),  // G#
-        PianoKey(isBlack = false), // A
-        PianoKey(isBlack = true),  // A#
-        PianoKey(isBlack = false), // B
+        PianoKey(name = "C", isBlack = false),
+        PianoKey(name = "C#", isBlack = true),
+        PianoKey(name = "D", isBlack = false),
+        PianoKey(name = "D#", isBlack = true),
+        PianoKey(name = "E", isBlack = false),
+        PianoKey(name = "F", isBlack = false),
+        PianoKey(name = "F#", isBlack = true),
+        PianoKey(name = "G", isBlack = false),
+        PianoKey(name = "G#", isBlack = true),
+        PianoKey(name = "A", isBlack = false),
+        PianoKey(name = "A#", isBlack = true),
+        PianoKey(name = "B", isBlack = false),
     )
 }
