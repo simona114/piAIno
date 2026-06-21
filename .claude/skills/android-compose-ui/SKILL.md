@@ -1,7 +1,7 @@
 ---
 name: android-compose-ui
 description: |
- Use this skill whenever writing or reviewing composables, optimizing recomposition, adding animations, creating previews, structuring a design system, or making any Compose UI decision beyond the MVVM layer.
+ Use this skill proactively whenever writing or reviewing composables, optimizing recomposition, adding animations, creating previews, structuring a design system, or making any Compose UI decision beyond the MVVM layer.
 ---
 
 # Android Compose UI Patterns

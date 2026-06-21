@@ -1,7 +1,7 @@
 ---
 name: delegate-implementation
 description: |
- Use this skill when an implementation task is large enough to split into focused, independently-ownable sub-problems. Breaks the task down, delegates each sub-problem to the most appropriate available subagent, coordinates parallel and sequential execution via the task list, and verifies and integrates the results.
+ Use this skill proactively before starting any implementation task that touches the Presentation, Audio Playback, or Piano Domain modules — check whether it's large enough to split into focused, independently-ownable sub-problems before writing any code yourself. Breaks the task down, delegates each sub-problem to the most appropriate available subagent, coordinates parallel and sequential execution via the task list, and verifies and integrates the results.
 ---
 
 # Delegate Implementation

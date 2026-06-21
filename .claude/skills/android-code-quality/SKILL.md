@@ -1,7 +1,7 @@
 ---
 name: android-code-quality
 description: |
-  Use this skill whenever writing or changing Kotlin/Android code — naming, null-safety, immutability, error handling, and general code hygiene. Complements android-architecture, android-navigation, and android-compose-ui, which cover structural concerns.
+  Use this skill proactively whenever writing or changing Kotlin/Android code, before the edit not after — naming, null-safety, immutability, error handling, and general code hygiene. Complements android-architecture, android-navigation, and android-compose-ui, which cover structural concerns.
 ---
 
 # Android Code Quality

@@ -1,7 +1,7 @@
 ---
 name: android-navigation
 description: |
-  Use this skill whenever adding a new screen, or changing navigation flow. 
+  Use this skill proactively before adding a new screen or changing navigation flow — read it before writing any NavHost, route, or screen-wiring code.
 ---
 
 # Android Navigation

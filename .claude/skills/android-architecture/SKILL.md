@@ -1,6 +1,7 @@
 ---
 name: android-architecture
-description: Use this skill whenever creating a new screen or feature, or deciding where code should live.
+description: Use this skill proactively before creating a new screen or feature, or deciding where code should live.
+---
 
 # Android Architecture
 
