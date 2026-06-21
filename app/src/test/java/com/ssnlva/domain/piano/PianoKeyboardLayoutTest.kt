@@ -39,9 +39,9 @@ class PianoKeyboardLayoutTest {
     @Test
     fun `keyboard starts at A0`() {
         val expected = listOf(
-            PianoKey(name = "A", octave = 0, isBlack = false),
-            PianoKey(name = "A#", octave = 0, isBlack = true),
-            PianoKey(name = "B", octave = 0, isBlack = false),
+            PianoKey(name = "A", octave = 0, isBlack = false, midiNote = 21),
+            PianoKey(name = "A#", octave = 0, isBlack = true, midiNote = 22),
+            PianoKey(name = "B", octave = 0, isBlack = false, midiNote = 23),
         )
         assertEquals(expected, PianoKeyboardLayout.keys.take(3))
     }
@@ -49,8 +49,8 @@ class PianoKeyboardLayoutTest {
     @Test
     fun `keyboard ends at C8`() {
         val expected = listOf(
-            PianoKey(name = "B", octave = 7, isBlack = false),
-            PianoKey(name = "C", octave = 8, isBlack = false),
+            PianoKey(name = "B", octave = 7, isBlack = false, midiNote = 107),
+            PianoKey(name = "C", octave = 8, isBlack = false, midiNote = 108),
         )
         assertEquals(expected, PianoKeyboardLayout.keys.takeLast(2))
     }
@@ -59,21 +59,28 @@ class PianoKeyboardLayoutTest {
     fun `octave number increments after B into the next C`() {
         val b3Index = PianoKeyboardLayout.keys.indexOfFirst { it.name == "B" && it.octave == 3 }
         val nextKey = PianoKeyboardLayout.keys[b3Index + 1]
-        assertEquals(PianoKey(name = "C", octave = 4, isBlack = false), nextKey)
+        assertEquals(PianoKey(name = "C", octave = 4, isBlack = false, midiNote = 60), nextKey)
     }
 
     @Test
     fun `center key index resolves to middle C`() {
         assertEquals(
-            PianoKey(name = "C", octave = 4, isBlack = false),
+            PianoKey(name = "C", octave = 4, isBlack = false, midiNote = 60),
             PianoKeyboardLayout.keys[PianoKeyboardLayout.centerKeyIndex]
         )
     }
 
     @Test
     fun `display name combines letter name and octave`() {
-        assertEquals("C4", PianoKey(name = "C", octave = 4, isBlack = false).displayName)
-        assertEquals("A#0", PianoKey(name = "A#", octave = 0, isBlack = true).displayName)
+        assertEquals("C4", PianoKey(name = "C", octave = 4, isBlack = false, midiNote = 60).displayName)
+        assertEquals("A#0", PianoKey(name = "A#", octave = 0, isBlack = true, midiNote = 22).displayName)
+    }
+
+    @Test
+    fun `midi note is contiguous starting at 21`() {
+        PianoKeyboardLayout.keys.forEachIndexed { index, key ->
+            assertEquals(21 + index, key.midiNote)
+        }
     }
 
     @Test
