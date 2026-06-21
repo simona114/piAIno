@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #888;
+  }
+  .screen {
+    position: relative;
+    width: 412px;
+    height: 915px;
+    overflow: hidden;
+    font-family: sans-serif;
+    background: #FFFFFF;
+  }
+  .toolbar {
+    position: relative;
+    width: 412px;
+    height: 64px;
+    background: #000000;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+  .back-arrow {
+    color: #FFFFFF;
+    font-size: 26px;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+  .title {
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .pref-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    box-sizing: border-box;
+  }
+  .pref-label {
+    color: #000000;
+    font-size: 17px;
+  }
+  .switch-track {
+    position: relative;
+    width: 50px;
+    height: 28px;
+    border-radius: 14px;
+    background: #000000;
+    box-sizing: border-box;
+  }
+  .switch-thumb {
+    position: absolute;
+    top: 3px;
+    left: 25px;
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background: #FFFFFF;
+  }
+</style>
+</head>
+<body>
+  <div class="screen">
+    <div class="toolbar">
+      <span class="back-arrow">&#8592;</span>
+      <span class="title">Settings</span>
+    </div>
+    <div class="pref-row">
+      <span class="pref-label">Show note names</span>
+      <div class="switch-track">
+        <div class="switch-thumb"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
