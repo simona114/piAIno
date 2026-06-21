@@ -25,6 +25,14 @@ class PianoKeyPlaybackTest {
     }
 
     @Test
+    fun `every one of the 88 keys resolves to a playable sound`() {
+        val allKeys = PianoKeyboardLayout.keys
+        assertEquals(88, allKeys.size)
+        assertAllHaveRegisteredSamples(allKeys)
+        assertAllWithinOneSemitone(allKeys)
+    }
+
+    @Test
     fun `every white key resolves to a sample that is actually registered for loading`() {
         assertAllHaveRegisteredSamples(whiteKeys)
     }
