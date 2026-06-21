@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+  }
+  .keyboard {
+    position: relative;
+    width: 915px;
+    height: 412px;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+  .frame-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 915px;
+    height: 48px;
+    background: #1C1B1F;
+    border-bottom: 3px solid #3A3A3D;
+    box-sizing: border-box;
+  }
+  .white-key {
+    position: absolute;
+    top: 48px;
+    width: 91.5px;
+    height: 364px;
+    background: #FFFBFE;
+    border: 2px solid #1C1B1F;
+    box-sizing: border-box;
+  }
+  .black-key {
+    position: absolute;
+    top: 48px;
+    width: 54.9px;
+    height: 218.4px;
+    background: #3A3A3D;
+  }
+  .label {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <div class="keyboard">
+    <div class="frame-bar"></div>
+
+    <!-- White keys: A3 B3 C4 D4 E4 F4 G4 A4 B4 C5 -->
+    <div class="white-key" style="left: 0px;"><span class="label" style="color: #6A1B9A;">A</span></div>
+    <div class="white-key" style="left: 91.5px;"><span class="label" style="color: #1E88E5;">B</span></div>
+    <div class="white-key" style="left: 183px;"><span class="label" style="color: #2E7D32;">C</span></div>
+    <div class="white-key" style="left: 274.5px;"><span class="label" style="color: #F9A825;">D</span></div>
+    <div class="white-key" style="left: 366px;"><span class="label" style="color: #EF6C00;">E</span></div>
+    <div class="white-key" style="left: 457.5px;"><span class="label" style="color: #C62828;">F</span></div>
+    <div class="white-key" style="left: 549px;"><span class="label" style="color: #D81B60;">G</span></div>
+    <div class="white-key" style="left: 640.5px;"><span class="label" style="color: #6A1B9A;">A</span></div>
+    <div class="white-key" style="left: 732px;"><span class="label" style="color: #1E88E5;">B</span></div>
+    <div class="white-key" style="left: 823.5px;"><span class="label" style="color: #2E7D32;">C</span></div>
+
+    <!-- Black keys: A#3 C#4 D#4 F#4 G#4 A#4, centered on the white-key boundary they sit on -->
+    <div class="black-key" style="left: 64.05px;"></div>
+    <div class="black-key" style="left: 247.05px;"></div>
+    <div class="black-key" style="left: 338.55px;"></div>
+    <div class="black-key" style="left: 521.55px;"></div>
+    <div class="black-key" style="left: 613.05px;"></div>
+    <div class="black-key" style="left: 704.55px;"></div>
+  </div>
+</body>
+</html>

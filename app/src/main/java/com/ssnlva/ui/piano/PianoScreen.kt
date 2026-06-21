@@ -25,8 +25,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.ssnlva.audio.PianoSoundPlayer
 import com.ssnlva.domain.piano.PianoKey
@@ -47,6 +52,8 @@ private const val BlackKeyWidthFraction = 0.6f
 private const val BlackKeyHeightFraction = 0.6f
 private const val WhiteKeyBorderWidthDp = 2f
 private const val FrameBarBorderWidthDp = 3f
+private const val NoteLabelFontSizeSp = 24f
+private const val NoteLabelBottomPaddingDp = 10f
 
 // Tuned so roughly one octave fills a typical landscape phone viewport, matching the look of
 // the original single-octave proof-of-concept. Not architecturally load-bearing.
@@ -66,7 +73,8 @@ private class PointerKeyState(val downPosition: Offset, var keyIndex: Int?, var 
  * it starts panning the keyboard instead - this is intended (a drifting finger should scroll,
  * not protect its held note). Other pointers' held keys are unaffected by another pointer's pan.
  *
- * Layout-only proof-of-concept: no labels.
+ * Each white key is labeled with its note letter near the bottom of the key, colored per
+ * letter via [NoteLetterColors]; black keys are unlabeled.
  */
 @Composable
 fun PianoScreen(modifier: Modifier = Modifier) {
@@ -83,6 +91,18 @@ fun PianoScreen(modifier: Modifier = Modifier) {
     val whiteKeyWidthPx = remember(density) { with(density) { WhiteKeyWidthDp.dp.toPx() } }
     val centerWhiteKeyIndex = remember(keys) {
         keys.subList(0, PianoKeyboardLayout.centerKeyIndex).count { !it.isBlack }
+    }
+    val textMeasurer = rememberTextMeasurer()
+    val noteLabelBottomPaddingPx = remember(density) { with(density) { NoteLabelBottomPaddingDp.dp.toPx() } }
+    // Each letter's TextLayoutResult is measured once and reused every frame - measuring text
+    // is expensive, and this draw scope re-runs continuously while panning.
+    val noteLetterLayouts = remember(textMeasurer) {
+        NoteLetterColors.mapValues { (letter, color) ->
+            textMeasurer.measure(
+                text = letter,
+                style = TextStyle(color = color, fontSize = NoteLabelFontSizeSp.sp, fontWeight = FontWeight.Bold)
+            )
+        }
     }
 
     var pressedKeyIndices by remember { mutableStateOf(emptySet<Int>()) }
@@ -200,6 +220,14 @@ fun PianoScreen(modifier: Modifier = Modifier) {
                 topLeft = Offset(left, keyboardTop),
                 size = Size(whiteKeyWidthPx, keyboardHeight),
                 style = Stroke(width = borderWidthPx)
+            )
+            val textLayout = noteLetterLayouts.getValue(key.name)
+            drawText(
+                textLayoutResult = textLayout,
+                topLeft = Offset(
+                    left + whiteKeyWidthPx / 2f - textLayout.size.width / 2f,
+                    keyboardTop + keyboardHeight - noteLabelBottomPaddingPx - textLayout.size.height
+                )
             )
         }
 
