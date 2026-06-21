@@ -1,6 +1,5 @@
 package com.ssnlva.ui.piano
 
-import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.WindowInsets
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,9 +28,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import com.ssnlva.audio.PianoSoundPlayer
 import com.ssnlva.domain.piano.PianoKey
 import com.ssnlva.domain.piano.PianoKeyboardLayout
-import com.ssnlva.domain.piano.displayName
 import com.ssnlva.ui.theme.PiAInoTheme
 import com.ssnlva.ui.util.LockScreenOrientation
 
@@ -60,13 +60,13 @@ private class PointerKeyState(val downPosition: Offset, var keyIndex: Int?, var 
  * Renders the full 88-key (A0-C8) piano keyboard, horizontally scrollable, with a frame bar
  * strip above the keys. Keys are tappable independently and multiple keys can be held at once
  * (one pointer per key), since chords are the normal case for a piano, not the edge case. A
- * held key is highlighted and toasts its note name once on press-down.
+ * held key is highlighted and plays its note once on press-down.
  *
  * If a pointer drifts past touch-slop while holding a key, that pointer's own key releases and
  * it starts panning the keyboard instead - this is intended (a drifting finger should scroll,
  * not protect its held note). Other pointers' held keys are unaffected by another pointer's pan.
  *
- * Layout-only proof-of-concept: no labels, no audio.
+ * Layout-only proof-of-concept: no labels.
  */
 @Composable
 fun PianoScreen(modifier: Modifier = Modifier) {
@@ -75,6 +75,10 @@ fun PianoScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val density = LocalDensity.current
     val keys = PianoKeyboardLayout.keys
+    val soundPlayer = remember { PianoSoundPlayer(context) }
+    DisposableEffect(Unit) {
+        onDispose { soundPlayer.release() }
+    }
     val whiteKeyCount = remember(keys) { keys.count { !it.isBlack } }
     val whiteKeyWidthPx = remember(density) { with(density) { WhiteKeyWidthDp.dp.toPx() } }
     val centerWhiteKeyIndex = remember(keys) {
@@ -118,7 +122,7 @@ fun PianoScreen(modifier: Modifier = Modifier) {
                                         PointerKeyState(change.position, keyIndex, isPanning = false)
                                     if (keyIndex != null) {
                                         pressedKeyIndices = pressedKeyIndices + keyIndex
-                                        Toast.makeText(context, keys[keyIndex].displayName, Toast.LENGTH_SHORT).show()
+                                        soundPlayer.playNote(keys[keyIndex].midiNote)
                                     }
                                     change.consume()
                                 }
