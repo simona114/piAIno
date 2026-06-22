@@ -94,6 +94,9 @@ class SoundPoolPianoPlayer(context: Context) : PianoSoundPlayer {
 
     override fun setSustainEnabled(enabled: Boolean) {
         sustainEnabled = enabled
+        if (!enabled) {
+            activeStreams.keys.toList().forEach { releaseNote(it) }
+        }
     }
 
     /** No-ops if [midiNote]'s anchor sample hasn't finished its (fast, startup-time-only)
