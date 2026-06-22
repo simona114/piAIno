@@ -43,11 +43,15 @@ internal val AnchorRawResources: Map<Int, Int> = mapOf(
  */
 class SoundPoolPianoPlayer(context: Context) : PianoSoundPlayer {
 
+    // USAGE_GAME routes SoundPool through Android's fast mixer (FastMixer) instead of the normal
+    // AudioFlinger software mixer. The normal path adds extra buffering that puts latency in the
+    // 100ms+ range on many devices; the fast path brings it down to ~5-20ms, which is necessary
+    // for key presses to feel immediate. USAGE_MEDIA explicitly goes through the normal path.
     private val soundPool = SoundPool.Builder()
         .setMaxStreams(MaxStreams)
         .setAudioAttributes(
             AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setUsage(AudioAttributes.USAGE_GAME)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
         )
