@@ -36,6 +36,13 @@ class PianoViewModel(
 
     fun onKeyReleased(midiNote: Int) = soundPlayer.releaseNote(midiNote)
 
+    /**
+     * Re-reads display preferences from the repository.
+     *
+     * Required because the repository exposes only imperative getters rather than a reactive
+     * stream. Call this whenever the Piano screen re-enters the foreground after the user
+     * may have changed preferences in Settings.
+     */
     fun refreshPreferences() {
         showNoteNames = repository.isShowNoteNamesEnabled()
         notation = repository.getNotation()
