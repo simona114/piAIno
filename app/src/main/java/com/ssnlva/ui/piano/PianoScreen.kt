@@ -119,14 +119,19 @@ fun PianoScreen(
         keys.subList(0, PianoKeyboardLayout.centerKeyIndex).count { !it.isBlack }
     }
     val textMeasurer = rememberTextMeasurer()
-    val noteLabelBottomPaddingPx = remember(density) { with(density) { NoteLabelBottomPaddingDp.dp.toPx() } }
+    val noteLabelBottomPaddingPx =
+        remember(density) { with(density) { NoteLabelBottomPaddingDp.dp.toPx() } }
     // Each letter's TextLayoutResult is measured once and reused every frame - measuring text
     // is expensive, and this draw scope re-runs continuously while panning.
     val noteLetterLayouts = remember(textMeasurer, notation) {
         NoteLetterColors.mapValues { (letter, color) ->
             textMeasurer.measure(
                 text = notation.labelFor(letter),
-                style = TextStyle(color = color, fontSize = NoteLabelFontSizeSp.sp, fontWeight = FontWeight.Bold)
+                style = TextStyle(
+                    color = color,
+                    fontSize = NoteLabelFontSizeSp.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
         }
     }
@@ -152,66 +157,85 @@ fun PianoScreen(
                     if (scrollOffsetPx < 0f) {
                         val centerWhiteKeyLeft = centerWhiteKeyIndex * whiteKeyWidthPx
                         val target = centerWhiteKeyLeft - size.width / 2f + whiteKeyWidthPx / 2f
-                        scrollOffsetPx = target.coerceIn(0f, maxScrollOffsetPx(size.width.toFloat()))
+                        scrollOffsetPx =
+                            target.coerceIn(0f, maxScrollOffsetPx(size.width.toFloat()))
                     }
                 }
                 .pointerInput(keys) {
                     val touchSlop = viewConfiguration.touchSlop
                     awaitEachGesture {
-                        do {
-                            val event = awaitPointerEvent()
-                            for (change in event.changes) {
-                                when {
-                                    change.changedToDown() -> {
-                                        val keyIndex = hitTestKey(
-                                            position = change.position,
-                                            canvasSize = size.toSize(),
-                                            keys = keys,
-                                            whiteKeyWidthPx = whiteKeyWidthPx,
-                                            scrollOffsetPx = scrollOffsetPx
-                                        )
-                                        pointerStates[change.id] =
-                                            PointerKeyState(change.position, keyIndex, isPanning = false)
-                                        if (keyIndex != null) {
-                                            pressedKeyIndices = pressedKeyIndices + keyIndex
-                                            onKeyPressed(keys[keyIndex].midiNote)
+                        try {
+                            do {
+                                val event = awaitPointerEvent()
+                                for (change in event.changes) {
+                                    when {
+                                        change.changedToDown() -> {
+                                            val keyIndex = hitTestKey(
+                                                position = change.position,
+                                                canvasSize = size.toSize(),
+                                                keys = keys,
+                                                whiteKeyWidthPx = whiteKeyWidthPx,
+                                                scrollOffsetPx = scrollOffsetPx
+                                            )
+                                            pointerStates[change.id] =
+                                                PointerKeyState(
+                                                    change.position,
+                                                    keyIndex,
+                                                    isPanning = false
+                                                )
+                                            if (keyIndex != null) {
+                                                pressedKeyIndices = pressedKeyIndices + keyIndex
+                                                onKeyPressed(keys[keyIndex].midiNote)
+                                            }
+                                            change.consume()
                                         }
-                                        change.consume()
-                                    }
 
-                                    change.changedToUp() -> {
-                                        val keyIndex = pointerStates.remove(change.id)?.keyIndex
-                                        if (keyIndex != null) {
-                                            pressedKeyIndices = pressedKeyIndices - keyIndex
-                                            onKeyReleased(keys[keyIndex].midiNote)
+                                        change.changedToUp() -> {
+                                            val keyIndex = pointerStates.remove(change.id)?.keyIndex
+                                            if (keyIndex != null) {
+                                                pressedKeyIndices = pressedKeyIndices - keyIndex
+                                                onKeyReleased(keys[keyIndex].midiNote)
+                                            }
+                                            change.consume()
                                         }
-                                        change.consume()
-                                    }
 
-                                    change.pressed -> {
-                                        val pointerState = pointerStates[change.id]
-                                        if (pointerState != null) {
-                                            if (pointerState.isPanning) {
-                                                val deltaX = change.position.x - change.previousPosition.x
-                                                scrollOffsetPx = (scrollOffsetPx - deltaX)
-                                                    .coerceIn(0f, maxScrollOffsetPx(size.width.toFloat()))
-                                                change.consume()
-                                            } else {
-                                                val heldKeyIndex = pointerState.keyIndex
-                                                val drift = (change.position - pointerState.downPosition).getDistance()
-                                                if (heldKeyIndex != null && drift > touchSlop) {
-                                                    pressedKeyIndices = pressedKeyIndices - heldKeyIndex
-                                                    onKeyReleased(keys[heldKeyIndex].midiNote)
-                                                    pointerState.keyIndex = null
-                                                    pointerState.isPanning = true
+                                        change.pressed -> {
+                                            val pointerState = pointerStates[change.id]
+                                            if (pointerState != null) {
+                                                if (pointerState.isPanning) {
+                                                    val deltaX =
+                                                        change.position.x - change.previousPosition.x
+                                                    scrollOffsetPx = (scrollOffsetPx - deltaX)
+                                                        .coerceIn(
+                                                            0f,
+                                                            maxScrollOffsetPx(size.width.toFloat())
+                                                        )
                                                     change.consume()
+                                                } else {
+                                                    val heldKeyIndex = pointerState.keyIndex
+                                                    val drift =
+                                                        (change.position - pointerState.downPosition).getDistance()
+                                                    if (heldKeyIndex != null && drift > touchSlop) {
+                                                        pressedKeyIndices =
+                                                            pressedKeyIndices - heldKeyIndex
+                                                        onKeyReleased(keys[heldKeyIndex].midiNote)
+                                                        pointerState.keyIndex = null
+                                                        pointerState.isPanning = true
+                                                        change.consume()
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                            } while (event.changes.any { it.pressed })
+                        } finally {
+                            pointerStates.values.forEach { state ->
+                                state.keyIndex?.let { onKeyReleased(keys[it].midiNote) }
                             }
-                        } while (event.changes.any { it.pressed })
+                            pointerStates.clear()
+                            pressedKeyIndices = emptySet()
+                        }
                     }
                 }
         ) {
