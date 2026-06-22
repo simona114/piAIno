@@ -60,8 +60,8 @@ private val FrameBarBorderColor = Color(0xFF3A3A3D)
 private val WhiteKeyColor = Color(0xFFFFFBFE)
 private val WhiteKeyPressedColor = Color(0xFFC9C9C9)
 private val WhiteKeyBorderColor = Color(0xFF1C1B1F)
-private val BlackKeyColor = Color(0xFF3A3A3D)
-private val BlackKeyPressedColor = Color(0xFF1C1B1F)
+private val BlackKeyColor = Color(0xFF1C1B1F)
+private val BlackKeyPressedColor = Color(0xFF3A3A3D)
 
 private const val FrameBarHeightFraction = 0.18f
 private const val BlackKeyWidthFraction = 0.6f

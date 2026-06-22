@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.ssnlva.domain.piano.Notation
 import com.ssnlva.ui.theme.PiAInoTheme
 
+private val PianoBlack = Color(0xFF1C1B1F)
+
 /**
  * Settings screen with a black toolbar/white body, distinct from the app's main theme.
  * Holds preferences for whether note-name labels are shown on the piano's white keys, and
@@ -54,7 +56,7 @@ fun SettingsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Black,
+                    containerColor = PianoBlack,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
@@ -74,14 +76,14 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Show note names", color = Color.Black)
+                Text("Show note names", color = PianoBlack)
                 Switch(
                     checked = showNoteNames,
                     onCheckedChange = onShowNoteNamesChange,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.White,
-                        checkedTrackColor = Color.Black,
-                        checkedBorderColor = Color.Black
+                        checkedTrackColor = PianoBlack,
+                        checkedBorderColor = PianoBlack
                     )
                 )
             }
@@ -92,19 +94,19 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Note notation", color = Color.Black)
+                Text("Note notation", color = PianoBlack)
                 SingleChoiceSegmentedButtonRow {
                     SegmentedButton(
                         selected = notation == Notation.LETTER,
                         onClick = { onNotationChange(Notation.LETTER) },
                         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
                         colors = SegmentedButtonDefaults.colors(
-                            activeContainerColor = Color.Black,
+                            activeContainerColor = PianoBlack,
                             activeContentColor = Color.White,
                             inactiveContainerColor = Color.White,
-                            inactiveContentColor = Color.Black,
-                            activeBorderColor = Color.Black,
-                            inactiveBorderColor = Color.Black
+                            inactiveContentColor = PianoBlack,
+                            activeBorderColor = PianoBlack,
+                            inactiveBorderColor = PianoBlack
                         )
                     ) {
                         Text("Letters")
@@ -114,12 +116,12 @@ fun SettingsScreen(
                         onClick = { onNotationChange(Notation.SOLFEGE) },
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
                         colors = SegmentedButtonDefaults.colors(
-                            activeContainerColor = Color.Black,
+                            activeContainerColor = PianoBlack,
                             activeContentColor = Color.White,
                             inactiveContainerColor = Color.White,
-                            inactiveContentColor = Color.Black,
-                            activeBorderColor = Color.Black,
-                            inactiveBorderColor = Color.Black
+                            inactiveContentColor = PianoBlack,
+                            activeBorderColor = PianoBlack,
+                            inactiveBorderColor = PianoBlack
                         )
                     ) {
                         Text("Solfège")
