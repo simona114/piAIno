@@ -54,7 +54,6 @@ import com.ssnlva.domain.piano.PianoKey
 import com.ssnlva.domain.piano.PianoKeyboardLayout
 import com.ssnlva.domain.piano.labelFor
 import com.ssnlva.ui.theme.PiAInoTheme
-import com.ssnlva.ui.util.LockScreenOrientation
 
 private val FrameBarColor = Color(0xFF1C1B1F)
 private val FrameBarBorderColor = Color(0xFF3A3A3D)
@@ -111,8 +110,6 @@ fun PianoScreen(
     onKeyReleased: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LockScreenOrientation()
-
     val density = LocalDensity.current
     val keys = PianoKeyboardLayout.keys
     val whiteKeyCount = remember(keys) { keys.count { !it.isBlack } }
