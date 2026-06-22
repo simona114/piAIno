@@ -5,16 +5,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -42,12 +49,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
-import com.ssnlva.audio.PianoSoundPlayer
 import com.ssnlva.domain.piano.PianoKey
 import com.ssnlva.domain.piano.PianoKeyboardLayout
 import com.ssnlva.ui.theme.PiAInoTheme
 import com.ssnlva.ui.util.LockScreenOrientation
-import org.koin.compose.koinInject
 
 private val FrameBarColor = Color(0xFF1C1B1F)
 private val FrameBarBorderColor = Color(0xFF3A3A3D)
@@ -67,6 +72,7 @@ private const val NoteLabelBottomPaddingDp = 10f
 private const val SettingsButtonSizeDp = 48f
 private const val SettingsButtonCornerRadiusDp = 8f
 private const val SettingsButtonEndPaddingDp = 12f
+private const val SustainLabelSwitchSpacingDp = 8f
 
 // Tuned so roughly one octave fills a typical landscape phone viewport, matching the look of
 // the original single-octave proof-of-concept. Not architecturally load-bearing.
@@ -94,14 +100,17 @@ private class PointerKeyState(val downPosition: Offset, var keyIndex: Int?, var 
 @Composable
 fun PianoScreen(
     showNoteNames: Boolean,
+    sustainEnabled: Boolean,
     onSettingsClick: () -> Unit,
+    onSustainToggle: () -> Unit,
+    onKeyPressed: (Int) -> Unit,
+    onKeyReleased: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LockScreenOrientation()
 
     val density = LocalDensity.current
     val keys = PianoKeyboardLayout.keys
-    val soundPlayer = koinInject<PianoSoundPlayer>()
     val whiteKeyCount = remember(keys) { keys.count { !it.isBlack } }
     val whiteKeyWidthPx = remember(density) { with(density) { WhiteKeyWidthDp.dp.toPx() } }
     val centerWhiteKeyIndex = remember(keys) {
@@ -163,7 +172,7 @@ fun PianoScreen(
                                             PointerKeyState(change.position, keyIndex, isPanning = false)
                                         if (keyIndex != null) {
                                             pressedKeyIndices = pressedKeyIndices + keyIndex
-                                            soundPlayer.playNote(keys[keyIndex].midiNote)
+                                            onKeyPressed(keys[keyIndex].midiNote)
                                         }
                                         change.consume()
                                     }
@@ -172,6 +181,7 @@ fun PianoScreen(
                                         val keyIndex = pointerStates.remove(change.id)?.keyIndex
                                         if (keyIndex != null) {
                                             pressedKeyIndices = pressedKeyIndices - keyIndex
+                                            onKeyReleased(keys[keyIndex].midiNote)
                                         }
                                         change.consume()
                                     }
@@ -189,6 +199,7 @@ fun PianoScreen(
                                                 val drift = (change.position - pointerState.downPosition).getDistance()
                                                 if (heldKeyIndex != null && drift > touchSlop) {
                                                     pressedKeyIndices = pressedKeyIndices - heldKeyIndex
+                                                    onKeyReleased(keys[heldKeyIndex].midiNote)
                                                     pointerState.keyIndex = null
                                                     pointerState.isPanning = true
                                                     change.consume()
@@ -273,6 +284,32 @@ fun PianoScreen(
             }
         }
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(
+                    start = SettingsButtonEndPaddingDp.dp,
+                    top = (frameBarHeightDp - SettingsButtonSizeDp.dp) / 2f
+                )
+                .height(SettingsButtonSizeDp.dp)
+        ) {
+            Text(text = "Sustain", color = WhiteKeyColor)
+            Spacer(modifier = Modifier.width(SustainLabelSwitchSpacingDp.dp))
+            Switch(
+                checked = sustainEnabled,
+                onCheckedChange = { onSustainToggle() },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = BlackKeyColor,
+                    checkedTrackColor = WhiteKeyColor,
+                    checkedBorderColor = WhiteKeyColor,
+                    uncheckedThumbColor = WhiteKeyColor,
+                    uncheckedTrackColor = Color.Transparent,
+                    uncheckedBorderColor = WhiteKeyColor
+                )
+            )
+        }
+
         Icon(
             imageVector = Icons.Default.Settings,
             contentDescription = "Settings",
@@ -342,6 +379,13 @@ private fun hitTestKey(
 @Composable
 private fun PianoScreenPreview() {
     PiAInoTheme {
-        PianoScreen(showNoteNames = true, onSettingsClick = {})
+        PianoScreen(
+            showNoteNames = true,
+            sustainEnabled = true,
+            onSettingsClick = {},
+            onSustainToggle = {},
+            onKeyPressed = {},
+            onKeyReleased = {}
+        )
     }
 }

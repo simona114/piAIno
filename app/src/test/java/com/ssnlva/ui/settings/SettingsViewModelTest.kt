@@ -9,9 +9,15 @@ class SettingsViewModelTest {
 
     private class FakePianoPreferencesRepository(initial: Boolean) : PianoPreferencesRepository {
         private var enabled = initial
+        private var sustainEnabled = true
         override fun isShowNoteNamesEnabled(): Boolean = enabled
         override fun setShowNoteNamesEnabled(enabled: Boolean) {
             this.enabled = enabled
+        }
+
+        override fun isSustainEnabled(): Boolean = sustainEnabled
+        override fun setSustainEnabled(enabled: Boolean) {
+            sustainEnabled = enabled
         }
     }
 

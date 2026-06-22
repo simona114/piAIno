@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ssnlva.ui.navigation.PianoRoute
 import com.ssnlva.ui.navigation.SettingsRoute
 import com.ssnlva.ui.piano.PianoScreen
+import com.ssnlva.ui.piano.PianoViewModel
 import com.ssnlva.ui.settings.SettingsScreen
 import com.ssnlva.ui.settings.SettingsViewModel
 import com.ssnlva.ui.theme.PiAInoTheme
@@ -26,9 +27,14 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = PianoRoute) {
                     composable<PianoRoute> {
+                        val pianoViewModel: PianoViewModel = koinViewModel()
                         PianoScreen(
                             showNoteNames = settingsViewModel.showNoteNames,
-                            onSettingsClick = { navController.navigate(SettingsRoute) }
+                            sustainEnabled = pianoViewModel.sustainEnabled,
+                            onSettingsClick = { navController.navigate(SettingsRoute) },
+                            onSustainToggle = pianoViewModel::onSustainToggle,
+                            onKeyPressed = pianoViewModel::onKeyPressed,
+                            onKeyReleased = pianoViewModel::onKeyReleased
                         )
                     }
                     composable<SettingsRoute> {
