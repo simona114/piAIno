@@ -87,7 +87,10 @@ class SoundPoolPianoPlayer(context: Context) : PianoSoundPlayer {
                 loadedSoundIds[anchorMidiNote] = soundId
             }
         }
-        for ((anchorMidiNote, rawResId) in AnchorRawResources) {
+        // Load the anchors covering the visible viewport (C3–D#5, centred on middle C) first
+        // so those keys are playable immediately. The outer registers load right after.
+        val (priority, deferred) = AnchorRawResources.entries.partition { it.key in 48..75 }
+        for ((anchorMidiNote, rawResId) in priority + deferred) {
             val loadId = soundPool.load(context, rawResId, 1)
             pendingByLoadId[loadId] = anchorMidiNote
         }
