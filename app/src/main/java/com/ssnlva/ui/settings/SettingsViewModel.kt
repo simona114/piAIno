@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.ssnlva.domain.piano.Notation
 import com.ssnlva.domain.piano.PianoPreferencesRepository
 
 class SettingsViewModel(
@@ -13,8 +14,16 @@ class SettingsViewModel(
     var showNoteNames by mutableStateOf(repository.isShowNoteNamesEnabled())
         private set
 
+    var notation by mutableStateOf(repository.getNotation())
+        private set
+
     fun updateShowNoteNames(enabled: Boolean) {
         showNoteNames = enabled
         repository.setShowNoteNamesEnabled(enabled)
+    }
+
+    fun updateNotation(notation: Notation) {
+        this.notation = notation
+        repository.setNotation(notation)
     }
 }

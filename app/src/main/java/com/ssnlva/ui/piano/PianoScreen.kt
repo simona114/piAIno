@@ -49,8 +49,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import com.ssnlva.domain.piano.Notation
 import com.ssnlva.domain.piano.PianoKey
 import com.ssnlva.domain.piano.PianoKeyboardLayout
+import com.ssnlva.domain.piano.labelFor
 import com.ssnlva.ui.theme.PiAInoTheme
 import com.ssnlva.ui.util.LockScreenOrientation
 
@@ -92,14 +94,16 @@ private class PointerKeyState(val downPosition: Offset, var keyIndex: Int?, var 
  * it starts panning the keyboard instead - this is intended (a drifting finger should scroll,
  * not protect its held note). Other pointers' held keys are unaffected by another pointer's pan.
  *
- * When [showNoteNames] is true, each white key is labeled with its note letter near the
- * bottom of the key, colored per letter via [NoteLetterColors]; black keys are never labeled.
+ * When [showNoteNames] is true, each white key is labeled with its note name near the
+ * bottom of the key, under the [notation] (letters or solfège) chosen by the user, colored per
+ * pitch class via [NoteLetterColors]; black keys are never labeled.
  * A square settings button sits on the frame bar and invokes [onSettingsClick] to open the
- * preferences screen that controls [showNoteNames].
+ * preferences screen that controls [showNoteNames] and [notation].
  */
 @Composable
 fun PianoScreen(
     showNoteNames: Boolean,
+    notation: Notation,
     sustainEnabled: Boolean,
     onSettingsClick: () -> Unit,
     onSustainToggle: () -> Unit,
@@ -120,10 +124,10 @@ fun PianoScreen(
     val noteLabelBottomPaddingPx = remember(density) { with(density) { NoteLabelBottomPaddingDp.dp.toPx() } }
     // Each letter's TextLayoutResult is measured once and reused every frame - measuring text
     // is expensive, and this draw scope re-runs continuously while panning.
-    val noteLetterLayouts = remember(textMeasurer) {
+    val noteLetterLayouts = remember(textMeasurer, notation) {
         NoteLetterColors.mapValues { (letter, color) ->
             textMeasurer.measure(
-                text = letter,
+                text = notation.labelFor(letter),
                 style = TextStyle(color = color, fontSize = NoteLabelFontSizeSp.sp, fontWeight = FontWeight.Bold)
             )
         }
@@ -381,6 +385,7 @@ private fun PianoScreenPreview() {
     PiAInoTheme {
         PianoScreen(
             showNoteNames = true,
+            notation = Notation.LETTER,
             sustainEnabled = true,
             onSettingsClick = {},
             onSustainToggle = {},

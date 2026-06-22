@@ -1,6 +1,7 @@
 package com.ssnlva.ui.piano
 
 import com.ssnlva.audio.PianoSoundPlayer
+import com.ssnlva.domain.piano.Notation
 import com.ssnlva.domain.piano.PianoPreferencesRepository
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -33,6 +34,7 @@ class PianoViewModelTest {
     ) : PianoPreferencesRepository {
         private var showNoteNamesEnabled = showNoteNames
         private var sustainEnabled = sustain
+        private var notation = Notation.LETTER
 
         override fun isShowNoteNamesEnabled(): Boolean = showNoteNamesEnabled
         override fun setShowNoteNamesEnabled(enabled: Boolean) {
@@ -42,6 +44,11 @@ class PianoViewModelTest {
         override fun isSustainEnabled(): Boolean = sustainEnabled
         override fun setSustainEnabled(enabled: Boolean) {
             sustainEnabled = enabled
+        }
+
+        override fun getNotation(): Notation = notation
+        override fun setNotation(notation: Notation) {
+            this.notation = notation
         }
     }
 

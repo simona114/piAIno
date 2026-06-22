@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
                         val pianoViewModel: PianoViewModel = koinViewModel()
                         PianoScreen(
                             showNoteNames = settingsViewModel.showNoteNames,
+                            notation = settingsViewModel.notation,
                             sustainEnabled = pianoViewModel.sustainEnabled,
                             onSettingsClick = { navController.navigate(SettingsRoute) },
                             onSustainToggle = pianoViewModel::onSustainToggle,
@@ -41,6 +42,8 @@ class MainActivity : ComponentActivity() {
                         SettingsScreen(
                             showNoteNames = settingsViewModel.showNoteNames,
                             onShowNoteNamesChange = settingsViewModel::updateShowNoteNames,
+                            notation = settingsViewModel.notation,
+                            onNotationChange = settingsViewModel::updateNotation,
                             onBack = { navController.popBackStack() }
                         )
                     }
