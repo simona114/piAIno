@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -143,10 +144,10 @@ fun PianoScreen(
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
         val frameBarHeightDp = maxHeight * FrameBarHeightFraction
-
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
+                .clipToBounds()
                 .onSizeChanged { size ->
                     if (scrollOffsetPx < 0f) {
                         val centerWhiteKeyLeft = centerWhiteKeyIndex * whiteKeyWidthPx
