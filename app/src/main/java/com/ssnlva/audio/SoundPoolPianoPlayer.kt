@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
 import com.ssnlva.R
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -53,7 +54,7 @@ class SoundPoolPianoPlayer(context: Context) : PianoSoundPlayer {
         .build()
 
     // anchor midiNote -> loaded SoundPool soundId, populated as each async load completes.
-    private val loadedSoundIds = mutableMapOf<Int, Int>()
+    private val loadedSoundIds = ConcurrentHashMap<Int, Int>()
 
     // Sustain defaults on: matches a real piano's sustain pedal being the "hold the ring" case
     // a player reaches for, rather than the cut-on-release case being the default.
@@ -79,7 +80,7 @@ class SoundPoolPianoPlayer(context: Context) : PianoSoundPlayer {
     private val fadingStreams = mutableMapOf<Int, Int>()
 
     init {
-        val pendingByLoadId = mutableMapOf<Int, Int>() // SoundPool load id -> anchor midiNote
+        val pendingByLoadId = ConcurrentHashMap<Int, Int>() // SoundPool load id -> anchor midiNote
         soundPool.setOnLoadCompleteListener { _, soundId, status ->
             val anchorMidiNote = pendingByLoadId.remove(soundId)
             if (status == 0 && anchorMidiNote != null) {
