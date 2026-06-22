@@ -23,8 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssnlva.R
 import com.ssnlva.domain.piano.Notation
 import com.ssnlva.ui.theme.PiAInoTheme
 
@@ -49,7 +51,7 @@ fun SettingsScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -76,7 +78,7 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Show note names", color = PianoBlack)
+                Text(stringResource(R.string.show_note_names), color = PianoBlack)
                 Switch(
                     checked = showNoteNames,
                     onCheckedChange = onShowNoteNamesChange,
@@ -94,7 +96,7 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Note notation", color = PianoBlack)
+                Text(stringResource(R.string.note_notation), color = PianoBlack)
                 SingleChoiceSegmentedButtonRow {
                     SegmentedButton(
                         selected = notation == Notation.LETTER,

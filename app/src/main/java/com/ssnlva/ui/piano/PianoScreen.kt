@@ -42,6 +42,8 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import com.ssnlva.R
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
@@ -320,7 +322,7 @@ fun PianoScreen(
                 )
                 .height(SettingsButtonSizeDp.dp)
         ) {
-            Text(text = "Sustain", color = WhiteKeyColor)
+            Text(text = stringResource(R.string.sustain), color = WhiteKeyColor)
             Spacer(modifier = Modifier.width(SustainLabelSwitchSpacingDp.dp))
             Switch(
                 checked = sustainEnabled,
@@ -338,7 +340,7 @@ fun PianoScreen(
 
         Icon(
             imageVector = Icons.Default.Settings,
-            contentDescription = "Settings",
+            contentDescription = stringResource(R.string.settings),
             tint = WhiteKeyColor,
             modifier = Modifier
                 .align(Alignment.TopEnd)
