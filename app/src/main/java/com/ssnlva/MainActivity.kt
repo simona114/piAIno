@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -23,14 +24,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             PiAInoTheme {
                 val navController = rememberNavController()
-                val settingsViewModel: SettingsViewModel = koinViewModel()
 
                 NavHost(navController = navController, startDestination = PianoRoute) {
                     composable<PianoRoute> {
                         val pianoViewModel: PianoViewModel = koinViewModel()
+                        LaunchedEffect(Unit) { pianoViewModel.refreshPreferences() }
                         PianoScreen(
-                            showNoteNames = settingsViewModel.showNoteNames,
-                            notation = settingsViewModel.notation,
+                            showNoteNames = pianoViewModel.showNoteNames,
+                            notation = pianoViewModel.notation,
                             sustainEnabled = pianoViewModel.sustainEnabled,
                             onSettingsClick = { navController.navigate(SettingsRoute) },
                             onSustainToggle = pianoViewModel::onSustainToggle,
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<SettingsRoute> {
+                        val settingsViewModel: SettingsViewModel = koinViewModel()
                         SettingsScreen(
                             showNoteNames = settingsViewModel.showNoteNames,
                             onShowNoteNamesChange = settingsViewModel::updateShowNoteNames,

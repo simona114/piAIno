@@ -30,11 +30,12 @@ class PianoViewModelTest {
 
     private class FakePianoPreferencesRepository(
         showNoteNames: Boolean = true,
-        sustain: Boolean = true
+        sustain: Boolean = true,
+        notation: Notation = Notation.LETTER
     ) : PianoPreferencesRepository {
         private var showNoteNamesEnabled = showNoteNames
         private var sustainEnabled = sustain
-        private var notation = Notation.LETTER
+        private var notation = notation
 
         override fun isShowNoteNamesEnabled(): Boolean = showNoteNamesEnabled
         override fun setShowNoteNamesEnabled(enabled: Boolean) {
@@ -89,5 +90,27 @@ class PianoViewModelTest {
     fun `defaults sustainEnabled to true when the repository starts enabled`() {
         val viewModel = PianoViewModel(FakePianoSoundPlayer(), FakePianoPreferencesRepository(sustain = true))
         assertTrue(viewModel.sustainEnabled)
+    }
+
+    @Test
+    fun `showNoteNames and notation default to the repository's current values at construction`() {
+        val repository = FakePianoPreferencesRepository(showNoteNames = false, notation = Notation.SOLFEGE)
+        val viewModel = PianoViewModel(FakePianoSoundPlayer(), repository)
+
+        assertFalse(viewModel.showNoteNames)
+        assertEquals(Notation.SOLFEGE, viewModel.notation)
+    }
+
+    @Test
+    fun `refreshPreferences re-reads showNoteNames and notation after the repository changes`() {
+        val repository = FakePianoPreferencesRepository(showNoteNames = true, notation = Notation.LETTER)
+        val viewModel = PianoViewModel(FakePianoSoundPlayer(), repository)
+
+        repository.setShowNoteNamesEnabled(false)
+        repository.setNotation(Notation.SOLFEGE)
+        viewModel.refreshPreferences()
+
+        assertFalse(viewModel.showNoteNames)
+        assertEquals(Notation.SOLFEGE, viewModel.notation)
     }
 }
