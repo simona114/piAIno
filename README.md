@@ -1,18 +1,18 @@
 # piAIno
 
-A virtual piano for Android. Play all 88 keys, scroll across octaves, and switch between letter and solfège notation — with realistic sampled sound and a sustain mode that mirrors a real piano pedal.
+A virtual piano for Android. Play all 88 keys, scroll across octaves, and switch between letter and solfège notation - with realistic sampled sound and a sustain mode that mirrors a real piano pedal.
 
 
 ---
 
 ## Features
 
-- **88-key piano keyboard** — full range from A0 to C8, horizontally scrollable
-- **Realistic sound** — 30 recorded grand piano samples, pitch-shifted to cover every key
-- **Polyphony** — hold or rapid-press multiple keys without notes cutting each other off
-- **Sustain mode** — notes ring after release, just like a sustain pedal
-- **Note labels** — toggle note names on the white keys, in letter (C, D#) or solfège (Do, Re#) notation
-- **Low-latency audio** — routed through Android's fast audio path for immediate response to touch
+- **88-key piano keyboard** - full range from A0 to C8, horizontally scrollable
+- **Realistic sound** - 30 recorded grand piano samples, pitch-shifted to cover every key
+- **Polyphony** - hold or rapid-press multiple keys without notes cutting each other off
+- **Sustain mode** - notes ring after release, just like a sustain pedal
+- **Note labels** - toggle note names on the white keys, in letter (C, D#) or solfège (Do, Re#) notation
+- **Low-latency audio** - routed through Android's fast audio path for immediate response to touch
 
 ---
 
@@ -46,11 +46,11 @@ A virtual piano for Android. Play all 88 keys, scroll across octaves, and switch
 
 The app is split into three logical modules (packages within a single Gradle module):
 
-**Presentation** — Compose screens (Splash, Piano, Settings), ViewModels, and the custom Canvas-drawn keyboard. The keyboard is drawn as a single Canvas rather than per-key composables to support smooth scrolling, black-key overlap, and simultaneous multi-touch at scale.
+**Presentation** - Compose screens (Splash, Piano, Settings), ViewModels, and the custom Canvas-drawn keyboard. The keyboard is drawn as a single Canvas rather than per-key composables to support smooth scrolling, black-key overlap, and simultaneous multi-touch at scale.
 
-**Piano Domain** — Pure Kotlin, no Android imports. Owns the 88-key layout, note naming in both notation systems, pitch-shift rate math, and user preferences. Both the UI and audio layers depend on this; neither depends on the other.
+**Piano Domain** - Pure Kotlin, no Android imports. Owns the 88-key layout, note naming in both notation systems, pitch-shift rate math, and user preferences. Both the UI and audio layers depend on this; neither depends on the other.
 
-**Audio Playback** — Loads the 30 anchor samples asynchronously on startup (center octave first, so the visible viewport is playable immediately), resolves any key press to its nearest anchor, and pitch-shifts via SoundPool playback rate. Manages polyphonic voice lifecycle, sustain fade-out, and thread safety between the binder-thread load callbacks and main-thread playback calls.
+**Audio Playback** - Loads the 30 anchor samples asynchronously on startup (center octave first, so the visible viewport is playable immediately), resolves any key press to its nearest anchor, and pitch-shifts via SoundPool playback rate. Manages polyphonic voice lifecycle, sustain fade-out, and thread safety between the binder-thread load callbacks and main-thread playback calls.
 
 ---
 
@@ -60,7 +60,7 @@ The project was developed using [Claude Code](https://claude.ai/code) with sever
 
 ### Specialist sub-agents
 
-Two domain-specific agents were configured — `android-ui-engineer` and `android-audio-engineer` — each scoped to its own module. They could be dispatched for focused code review or implementation work, and run in parallel when the tasks were independent.
+Two domain-specific agents were configured - `android-ui-engineer` and `android-audio-engineer` - each scoped to its own module. They could be dispatched for focused code review or implementation work, and run in parallel when the tasks were independent.
 
 ![Specialist split planning](documentation/screenshots/ai-planning.png)
 
@@ -74,7 +74,7 @@ Reusable skills were set up for recurring workflows: splitting uncommitted chang
 
 ### Task planning
 
-For multi-step work, Claude Code broke the plan into tracked subtasks with explicit blocking relationships — a task depending on another could not start until its dependency was resolved.
+For multi-step work, Claude Code broke the plan into tracked subtasks with explicit blocking relationships - a task depending on another could not start until its dependency was resolved.
 
 ![Task planning with subtasks](documentation/screenshots/ai-tasks.png)
 
