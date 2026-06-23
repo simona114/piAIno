@@ -80,7 +80,14 @@ For multi-step work, Claude Code broke the plan into tracked subtasks with expli
 
 ### Prompt logging hook
 
-A hook was configured to log every prompt sent during a session to a local JSON file. This produced a record of the full interaction history that could be reviewed after the session.
+A hook was configured to log every prompt I sent during a session to a local JSON file, so I could personally review and analyse my prompting patterns across the project. Example entries:
+
+```
+{"session_id":"397a080f-0cf6-4cb1-9f8b-66731362bb60","permission_mode":"plan","hook_event_name":"UserPromptSubmit","prompt":"Analyse the generated system architecture modules and responsibilities and create only the subagents that are truly needed for this project. Before generating the files, explain why each subagent is needed, and proceed only after approval. Use the starter template and recommendations from: https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/"}
+{"session_id":"cdc36c9a-a64b-4df8-aee5-f2143eda9b18","permission_mode":"plan","hook_event_name":"UserPromptSubmit","prompt":"I want to implement the next step - Where clicking on a key would produce the actual sound of the key. The sounds for each key would need to be downloaded and stored in the project first"}
+{"session_id":"32df254f-9ca5-4a87-b58f-745ec2e8f0ad","permission_mode":"plan","hook_event_name":"UserPromptSubmit","prompt":"I want to build the feature about showing the note names on the bottom of the white keys. I imagine they will be colorful, e.g use purple for note A, use green, red, pink, blue for the rest and so on. I want only the note names on the white keys, I don't want the octave number. Showing the note names for now won't be controlled by preferences screen - note names will be always shown"}
+{"session_id":"cdc36c9a-a64b-4df8-aee5-f2143eda9b18","permission_mode":"auto","hook_event_name":"UserPromptSubmit","prompt":"Can we create tests that ensure that for the key we pressed, we would use a proper sound and pitching, for black and white keys"}
+```
 
 ### Emulator verification
 
