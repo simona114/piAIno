@@ -91,9 +91,11 @@ A hook was configured to log every prompt I sent during a session to a local JSO
 
 ### Emulator verification
 
-For visual work (app icon, splash screen), the agent took a screenshot from a running emulator and compared it against the mockup automatically, reporting pass/fail per element.
+For visual work (app icon, splash screen), the agent first crated an HTML mockup, took a screenshot on a headless browser, requested approval before proceeding with implementation. Then took a screenshot from a running emulator and compared the two automatically, reporting pass/fail per element and storing the result screenshot
 
-<!-- TODO: screenshot - emulator verification results -->
+![HTML mockup created for verification](documentation/screenshots/ai-mockup.png)
+
+![Emulator verification results](documentation/screenshots/ai-emulator-verify.png)
 
 ---
 
