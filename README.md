@@ -2,6 +2,8 @@
 
 A virtual piano for Android. Play all 88 keys, scroll across octaves, and switch between letter and solfège notation - with realistic sampled sound and a sustain mode that mirrors a real piano pedal.
 
+Built as a project for the **AI Assisted Development** course, part of the **AI for Developers module** at [SoftUni](https://ai.softuni.bg/).
+
 
 ---
 
