@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -65,6 +66,8 @@ private val WhiteKeyPressedColor = Color(0xFFC9C9C9)
 private val WhiteKeyBorderColor = Color(0xFF1C1B1F)
 private val BlackKeyColor = Color(0xFF1C1B1F)
 private val BlackKeyPressedColor = Color(0xFF3A3A3D)
+private val BlackKeyFaceColor = Color(0xFF525255)
+private val BlackKeyFacePressedColor = Color(0xFF707073)
 
 private const val FrameBarHeightFraction = 0.18f
 private const val BlackKeyWidthFraction = 0.6f
@@ -81,6 +84,11 @@ private const val SustainLabelSwitchSpacingDp = 8f
 // Tuned so roughly one octave fills a typical landscape phone viewport, matching the look of
 // the original single-octave proof-of-concept. Not architecturally load-bearing.
 private const val WhiteKeyWidthDp = 90f
+private const val WhiteKeyCornerRadiusDp = 6f
+private const val BlackKeyCornerRadiusDp = 5f
+private const val BlackKeyFaceInsetFraction = 0.13f
+private const val BlackKeyCapFraction = 0.03f
+private const val BlackKeyFaceBottomFraction = 0.87f
 
 /** Tracks one active touch: where it went down, which key (if any) it's holding, and whether
  *  it has drifted past touch-slop into panning the keyboard instead. */
@@ -247,6 +255,8 @@ fun PianoScreen(
             val keyboardHeight = size.height - frameBarHeight
             val borderWidthPx = WhiteKeyBorderWidthDp.dp.toPx()
             val frameBarBorderWidthPx = FrameBarBorderWidthDp.dp.toPx()
+            val whiteCornerRadius = WhiteKeyCornerRadiusDp.dp.toPx()
+            val blackCornerRadius = BlackKeyCornerRadiusDp.dp.toPx()
             val blackKeyWidthPx = whiteKeyWidthPx * BlackKeyWidthFraction
             val blackKeyHeight = keyboardHeight * BlackKeyHeightFraction
 
@@ -270,15 +280,17 @@ fun PianoScreen(
                 whiteKeyIndex++
                 val left = whiteKeyIndex * whiteKeyWidthPx - effectiveScrollOffsetPx
                 if (left + whiteKeyWidthPx < 0f || left > size.width) continue
-                drawRect(
+                drawRoundRect(
                     color = if (index in pressedKeyIndices) WhiteKeyPressedColor else WhiteKeyColor,
                     topLeft = Offset(left, keyboardTop),
-                    size = Size(whiteKeyWidthPx, keyboardHeight)
+                    size = Size(whiteKeyWidthPx, keyboardHeight),
+                    cornerRadius = CornerRadius(whiteCornerRadius)
                 )
-                drawRect(
+                drawRoundRect(
                     color = WhiteKeyBorderColor,
                     topLeft = Offset(left, keyboardTop),
                     size = Size(whiteKeyWidthPx, keyboardHeight),
+                    cornerRadius = CornerRadius(whiteCornerRadius),
                     style = Stroke(width = borderWidthPx)
                 )
                 if (showNoteNames) {
@@ -304,10 +316,25 @@ fun PianoScreen(
                 val boundaryX = (whiteKeyIndex + 1) * whiteKeyWidthPx
                 val left = boundaryX - blackKeyWidthPx / 2f - effectiveScrollOffsetPx
                 if (left + blackKeyWidthPx < 0f || left > size.width) continue
-                drawRect(
-                    color = if (index in pressedKeyIndices) BlackKeyPressedColor else BlackKeyColor,
+                val isPressed = index in pressedKeyIndices
+                drawRoundRect(
+                    color = if (isPressed) BlackKeyPressedColor else BlackKeyColor,
                     topLeft = Offset(left, keyboardTop),
-                    size = Size(blackKeyWidthPx, blackKeyHeight)
+                    size = Size(blackKeyWidthPx, blackKeyHeight),
+                    cornerRadius = CornerRadius(blackCornerRadius)
+                )
+                val faceInset = blackKeyWidthPx * BlackKeyFaceInsetFraction
+                drawRoundRect(
+                    color = if (isPressed) BlackKeyFacePressedColor else BlackKeyFaceColor,
+                    topLeft = Offset(
+                        left + faceInset,
+                        keyboardTop + blackKeyHeight * BlackKeyCapFraction
+                    ),
+                    size = Size(
+                        blackKeyWidthPx - faceInset * 2f,
+                        blackKeyHeight * (BlackKeyFaceBottomFraction - BlackKeyCapFraction)
+                    ),
+                    cornerRadius = CornerRadius(blackCornerRadius * 0.6f)
                 )
             }
         }
