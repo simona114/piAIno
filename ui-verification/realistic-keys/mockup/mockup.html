@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; background: #1C1B1F; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<canvas id="piano" width="915" height="412"></canvas>
+<script>
+const canvas = document.getElementById('piano');
+const ctx = canvas.getContext('2d');
+
+const W = 915, H = 412;
+
+// ── Colors (from PianoScreen.kt) ──────────────────────────────────────────
+const FRAME_BAR       = '#1C1B1F';
+const FRAME_BORDER    = '#3A3A3D';
+const WHITE_KEY       = '#FFFBFE';
+const WHITE_PRESSED   = '#C9C9C9';
+const WHITE_BORDER    = '#1C1B1F';
+const BLACK_KEY       = '#1C1B1F';
+const BLACK_PRESSED   = '#3A3A3D';
+const BLACK_FACE      = '#525255';
+const BLACK_FACE_PRES = '#707073';
+
+// ── Layout (mirrors PianoScreen constants) ────────────────────────────────
+const FRAME_BAR_H_FRAC   = 0.18;
+const BLACK_W_FRAC       = 0.60;
+const BLACK_H_FRAC       = 0.60;
+const WHITE_CORNER       = 6;
+const BLACK_CORNER       = 5;
+const FACE_INSET_FRAC    = 0.13;
+const CAP_FRAC           = 0.03;  // tiny dark cap; face nearly reaches the frame bar
+const FACE_BOTTOM_FRAC   = 0.87;  // dark bottom ledge for depth
+const WHITE_KEY_W        = 90;
+const BORDER_W           = 2;
+
+const frameBarH  = H * FRAME_BAR_H_FRAC;
+const keyboardTop = frameBarH;
+const keyboardH  = H - frameBarH;
+const blackKeyW  = WHITE_KEY_W * BLACK_W_FRAC;
+const blackKeyH  = keyboardH * BLACK_H_FRAC;
+
+// ── Key pattern for C-major two octaves (C C# D D# E F F# G G# A A# B) ──
+const PATTERN = [0,1,0,1,0,0,1,0,1,0,1,0];
+const keys = [];
+for (let oct = 0; oct < 3; oct++) {
+  for (const b of PATTERN) keys.push(!!b);
+}
+
+// ── Which keys are visually pressed (by position in keys[]) ───────────────
+// White: keys[0]=C, keys[2]=D, keys[4]=E … find white key index 2 (E)
+let wCount = 0;
+const pressedWhiteKeys = new Set();
+const pressedBlackKeys = new Set();
+for (let i = 0; i < keys.length; i++) {
+  if (!keys[i]) {
+    if (wCount === 2) pressedWhiteKeys.add(i); // press E (3rd white)
+    wCount++;
+  } else {
+    // Press the second black key (C#1 of second octave)
+    if (i === PATTERN.indexOf(1) + 12) pressedBlackKeys.add(i);
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function roundedRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y,     x + w, y + r,     r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x,     y + h, x,     y + h - r, r);
+  ctx.lineTo(x,     y + r);
+  ctx.arcTo(x,     y,     x + r, y,         r);
+  ctx.closePath();
+}
+
+// ── Frame bar ─────────────────────────────────────────────────────────────
+ctx.fillStyle = FRAME_BAR;
+ctx.fillRect(0, 0, W, frameBarH);
+ctx.strokeStyle = FRAME_BORDER;
+ctx.lineWidth = 3;
+ctx.beginPath();
+ctx.moveTo(0,  frameBarH - 1.5);
+ctx.lineTo(W,  frameBarH - 1.5);
+ctx.stroke();
+
+// ── White keys ────────────────────────────────────────────────────────────
+let whiteIdx = -1;
+for (let i = 0; i < keys.length; i++) {
+  if (keys[i]) continue;
+  whiteIdx++;
+  const left = whiteIdx * WHITE_KEY_W;
+  if (left + WHITE_KEY_W < 0 || left > W) continue;
+  const pressed = pressedWhiteKeys.has(i);
+
+  ctx.fillStyle = pressed ? WHITE_PRESSED : WHITE_KEY;
+  roundedRect(left, keyboardTop, WHITE_KEY_W, keyboardH, WHITE_CORNER);
+  ctx.fill();
+
+  ctx.strokeStyle = WHITE_BORDER;
+  ctx.lineWidth = BORDER_W;
+  roundedRect(left, keyboardTop, WHITE_KEY_W, keyboardH, WHITE_CORNER);
+  ctx.stroke();
+}
+
+// ── Black keys ────────────────────────────────────────────────────────────
+whiteIdx = -1;
+for (let i = 0; i < keys.length; i++) {
+  if (!keys[i]) { whiteIdx++; continue; }
+  const boundaryX = (whiteIdx + 1) * WHITE_KEY_W;
+  const left = boundaryX - blackKeyW / 2;
+  if (left + blackKeyW < 0 || left > W) continue;
+  const pressed = pressedBlackKeys.has(i);
+
+  // Body
+  ctx.fillStyle = pressed ? BLACK_PRESSED : BLACK_KEY;
+  roundedRect(left, keyboardTop, blackKeyW, blackKeyH, BLACK_CORNER);
+  ctx.fill();
+
+  // Bevel face
+  const faceInset = blackKeyW * FACE_INSET_FRAC;
+  const faceTop   = keyboardTop + blackKeyH * CAP_FRAC;
+  const faceH     = blackKeyH * (FACE_BOTTOM_FRAC - CAP_FRAC);
+  ctx.fillStyle = pressed ? BLACK_FACE_PRES : BLACK_FACE;
+  roundedRect(left + faceInset, faceTop, blackKeyW - faceInset * 2, faceH, BLACK_CORNER * 0.6);
+  ctx.fill();
+}
+</script>
+</body>
+</html>
