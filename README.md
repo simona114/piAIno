@@ -20,6 +20,10 @@ Built as a project for the **AI Assisted Development** course, part of the **AI 
 
 ## Screenshots/Videos
 
+### Demo
+
+https://github.com/simona114/piAIno/raw/master/documentation/videos/piAIno-Demonstration.mp4
+
 ### Splash screen
 ![Splash screen](documentation/screenshots/demo-splash.jpg)
 
