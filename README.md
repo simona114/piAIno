@@ -105,6 +105,13 @@ For visual work (app icon, splash screen), the agent first crated an HTML mockup
 
 ---
 
+## Biggest Challenge
+
+Logo generation required the most model comparisons and iterations of anything in the project. The concept required specific letters in "piAIno" to each mimic a musical symbol: a quarter note for **p**, the note name **A**, a black piano key for **i**, and a whole note for **o**, rendered in a music-notation style font.
+
+Claude Sonnet and Gemini were both tried first. Neither matched the concept: both consistently generated an eighth note instead of a quarter note, and instead of a standalone black key they included the surrounding white keys. Rephrasing the prompts and providing reference images did not help. GPT-5.5 was tried next and produced the intended design after a few iterations.
+---
+
 ## Sound Samples
 
 Piano sounds are from the **Salamander Grand Piano** by Alexander Holm, licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
