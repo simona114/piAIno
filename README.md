@@ -7,6 +7,12 @@ Built as a project for the **AI Assisted Development** course, part of the **AI 
 
 ---
 
+## Install
+
+Download the APK from the [Releases](https://github.com/simona114/piAIno/releases) page and open it on your Android device. You will need to allow installation from unknown sources.
+
+---
+
 ## Features
 
 - **88-key piano keyboard** - full range from A0 to C8, horizontally scrollable
